@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>    Fifty ways to dump your desktop: command-line alternatives to Microsoft Word, PowerPoint, and Excel
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic|Merriweather:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/theme/css/cid.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+            <div class="container">
+
+<header class="blog-header">
+    <h1><a href="">Absurdly Simple</a></h1>
+    <p></p>
+    <nav>
+        <a href="/">INDEX</a>
+        <a href="/archives">ARCHIVES</a>
+        <a href="/categories">CATEGORIES</a>
+    </nav>
+</header>
+
+    <div class="post">
+
+        <header>
+            <h1>Fifty ways to dump your desktop: command-line alternatives to Microsoft Word, PowerPoint, and Excel</h1>
+            <p class="date">Written on <time datetime="2024-09-24T00:00:00-04:00">Sep 24, 2024</time></p>
+        </header>
+
+        <article>
+            <blockquote>
+<p>I’d like to help you in your struggle<br>
+To be free<br>
+There must be fifty ways<br>
+To leave your lover...<br>
+Just drop off the key, Lee<br>
+And get yourself free  </p>
+</blockquote>
+<p>-- Paul Simon, "50 Ways to Leave Your Lover"</p>
+<p>With apologies to Paul, "I'd like to help you in your struggle to be free" from software tools with graphical user interfaces, especially Microsoft Word, PowerPoint, and Excel.  There are lots of ways to "get yourself free" -- I'll point out a few here.</p>
+<p>What's wrong with Word, Excel, and PowerPoint?  A lot of important work gets done with these tools every day.  Plus, software engineers do sometimes need to produce nicely-formatted documents, spreadsheets, and slides.  Don't most people use Office for that? </p>
+<p>The Microsoft Office suite is fine as far as it goes, but the ability to keep source files in distributed version control is a key advantage of command-line tools.  Version control with Git helps prevent data loss and enables integrating changes from multiple contributors, with no ambiguity about which copy of a file is the version of record. </p>
+<p>Word and PowerPoint can be easily replaced with <code>pandoc</code>, which accepts Markdown files and produces .pdf documents and slides.  Markdown is a plain-text format that is meant to be readable in itself, unlike HTML.</p>
+<p>In turn, <code>sqlite</code> replaces Excel.  SQL scripts can be read into <code>sqlite</code> and then exported to .csv files, which can be shared with Excel-using colleagues. </p>
+<p>Here is some Markdown that can be turned into a .pdf document with <code>pandoc -s markdown.md -o document.pdf</code> or a slide deck with <code>pandoc -t beamer -s markdown.md -o slides.pdf</code>.  The slide deck contains a title slide and a content slide.</p>
+<div class="highlight"><pre><span></span><code>---
+<span class="gu">title: A sample document</span>
+<span class="gu">---</span>
+
+<span class="gh"># Summary</span>
+
+<span class="sb">`pandoc`</span> converts Markdown to .pdf documents and slides!
+</code></pre></div>
+
+<p>The following SQL script can be read into <code>sqlite</code> and then exported to produce a .csv file with <code>sqlite3 test.db &lt; test.sql; sqlite3 -header -csv test.db 'select * from table1;' &gt; test.csv</code>.  It describes a table with a calculated column <code>c</code>, which gives the hypotenuse of a right triangle with two shorter sides <code>a</code> and <code>b</code>. </p>
+<div class="highlight"><pre><span></span><code><span class="k">create</span><span class="w"> </span><span class="k">table</span><span class="w"> </span><span class="n">table1</span><span class="p">(</span>
+<span class="w">    </span><span class="n">a</span><span class="w"> </span><span class="nb">real</span><span class="p">,</span>
+<span class="w">    </span><span class="n">b</span><span class="w"> </span><span class="nb">real</span><span class="p">,</span>
+<span class="w">    </span><span class="k">c</span><span class="w"> </span><span class="nb">real</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt</span><span class="p">(</span><span class="n">power</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">power</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="p">);</span>
+
+<span class="k">insert</span><span class="w"> </span><span class="k">into</span><span class="w"> </span><span class="n">table1</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">values</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+</code></pre></div>
+
+<p>Notably, both the Markdown file and the SQL script above are text files that can be kept in version control.</p>
+<p>Of course, Excel offers plotting capabilities that <code>sqlite</code> can't duplicate.  That task can be covered by <code>gnuplot</code>, but that's a topic for another post.</p>
+        </article>
+
+        <footer>
+            <p>This entry is posted in <a href="/category/tools.html">tools</a>.</p>
+        </footer>
+
+
+    </div>
+
+
+<footer class="blog-footer">
+
+    <ul class="nav">
+    </ul>
+
+    <p class="disclaimer">
+    Built with <a href="http://getpelican.com">Pelican</a> and the <a href="https://github.com/hdra/Pelican-Cid">Cid</a> theme.
+    </p>
+</footer>
+            </div>
+    </body>
+</html>

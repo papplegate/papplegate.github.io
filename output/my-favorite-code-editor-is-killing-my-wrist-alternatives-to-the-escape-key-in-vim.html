@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>    My favorite code editor is killing my wrist: alternatives to the Escape key in Vim
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic|Merriweather:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/theme/css/cid.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+            <div class="container">
+
+<header class="blog-header">
+    <h1><a href="">Absurdly Simple</a></h1>
+    <p></p>
+    <nav>
+        <a href="/">INDEX</a>
+        <a href="/archives">ARCHIVES</a>
+        <a href="/categories">CATEGORIES</a>
+    </nav>
+</header>
+
+    <div class="post">
+
+        <header>
+            <h1>My favorite code editor is killing my wrist: alternatives to the Escape key in Vim</h1>
+            <p class="date">Written on <time datetime="2024-09-23T00:00:00-04:00">Sep 23, 2024</time></p>
+        </header>
+
+        <article>
+            <p>I love writing code in Vim, but pressing the Escape key constantly hurts.  In Word, the keyboard keys are always "live" and create new characters on the page when they're pressed.  In contrast, Vim is a modal editor: typing makes new characters only when the editor is in insert mode.  There are two other common modes, normal (for entering commands) and visual (for selecting text).  </p>
+<p>Switching between modes in Vim involves pressing the Escape key.  For example, to go from insert mode to normal mode and finally visual mode, we press the Escape key followed by the V key.  </p>
+<p>Using Vim effectively means changing modes frequently.  Toggling between insert mode and normal mode is very common because normal mode enables cursor movement.  Rapid jumping within and among code files is one of the reasons I love using Vim, and that movement happens from normal mode. </p>
+<p>When I press the Escape key, my wrist turns slightly as my left ring finger moves from the S key on the home row up to the Escape key.  Making this movement hundreds of times a day led to growing pain in my wrist.  I stopped wearing a watch for a while because I didn't want to admit that Vim might be to blame, but the pain finally made me look for alternatives.</p>
+<p>It's possible to map various key combinations to mimic the function of the Escape key, but these possible remappings all seem inadequate.  <code>inoremap jk</code> seems to be an especially common addition to <code>.vimrc</code> files, and some Vim users remap Caps Lock to Escape systemwide.  All of these customizations have an important disadvantage: they become part of muscle memory and are then hard to work around when using a machine other than one's own laptop. </p>
+<p>Luckily, there are built-in alternatives to the Escape key that require no customization at all.  Pressing Ctrl+[ and Ctrl+C both have the same effect as the Escape key.  Of these two combinations, Ctrl+C requires less hand movement to press, but I prefer Ctrl+[ out of habit.</p>
+<p>If only I could disable the Escape key altogether, I could break myself of the habit of using it.  Unfortunately, remapping the Escape key to a no-op with, say, <code>inoremap &lt;Esc&gt; &lt;Nop&gt;</code> and <code>vnoremap &lt;Esc&gt; &lt;Nop&gt;</code> makes Vim unusable.  With those remappings in place, you can return to normal mode using any of the alternatives above, but it's impossible to enter commands without immediately reentering insert mode. </p>
+        </article>
+
+        <footer>
+            <p>This entry is posted in <a href="/category/vim.html">vim</a>.</p>
+        </footer>
+
+
+    </div>
+
+
+<footer class="blog-footer">
+
+    <ul class="nav">
+    </ul>
+
+    <p class="disclaimer">
+    Built with <a href="http://getpelican.com">Pelican</a> and the <a href="https://github.com/hdra/Pelican-Cid">Cid</a> theme.
+    </p>
+</footer>
+            </div>
+    </body>
+</html>
