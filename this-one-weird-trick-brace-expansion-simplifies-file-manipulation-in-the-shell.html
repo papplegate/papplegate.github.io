@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>    This one weird trick (brace expansion) simplifies file manipulation in the shell
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic|Merriweather:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/theme/css/cid.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+            <div class="container">
+
+<header class="blog-header">
+    <h1><a href="">Absurdly Simple</a></h1>
+    <p></p>
+    <nav>
+        <a href="/">INDEX</a>
+        <a href="/archives">ARCHIVES</a>
+        <a href="/categories">CATEGORIES</a>
+    </nav>
+</header>
+
+    <div class="post">
+
+        <header>
+            <h1>This one weird trick (brace expansion) simplifies file manipulation in the shell</h1>
+            <p class="date">Written on <time datetime="2024-10-06T00:00:00-04:00">Oct 06, 2024</time></p>
+        </header>
+
+        <article>
+            <p>File manipulation in Windows or Mac OS is simple and appealingly visual.  To rename a file, we just right-click or double-click on the file's icon and type the new name.  Moving files is only slightly harder and involves dragging the file from one folder to another.</p>
+<p>By comparison, file manipulation in the shell can feel like a lot of work.  Of course, the <code>mv</code> command renames and moves files, and the <code>cp</code> command copies files.  These commands are simple enough to use when the source and destination files are in the present working directory, but often one or both files are somewhere else.  For example, renaming a file from the root of a git repository might involve <code>mv src/services/templateService.ts src/services/adminService.ts</code>.  Here, <code>src/services/</code> is duplicated between the originating and destination paths, which means extra typing.</p>
+<p>Brace expansion provides a way to avoid this issue.  In brace expansion, we put multiple comma-separated options between curly braces.  With brace expansion, the preceding example becomes <code>mv src/services/{template,admin}Service.ts</code>.  We now have to type <code>src/services/</code> only once.</p>
+<p>Both <code>mv</code> and <code>cp</code> expect two arguments; how does brace expansion supply them?  We can examine the results of brace expansion with the <code>echo</code> command.  Continuing our example, <code>echo src/services/{template,admin}Service.ts</code> gives <code>src/services/templateService.ts src/services/adminService.ts</code> -- the first and second arguments to <code>mv</code>.</p>
+<p>Because <code>cp</code> takes only one destination file at a time, making multiple copies of a file requires combining a loop with brace expansion.  <code>for newfile in src/services/{contact,payment}Service.ts; do cp src/services/templateService.ts "$newfile"; done;</code> creates two copies of <code>templateService.ts</code> with appropriate names. </p>
+        </article>
+
+        <footer>
+            <p>This entry is posted in <a href="/category/bash.html">bash</a>.</p>
+        </footer>
+
+
+    </div>
+
+
+<footer class="blog-footer">
+
+    <ul class="nav">
+    </ul>
+
+    <p class="disclaimer">
+    Built with <a href="http://getpelican.com">Pelican</a> and the <a href="https://github.com/hdra/Pelican-Cid">Cid</a> theme.
+    </p>
+</footer>
+            </div>
+    </body>
+</html>
