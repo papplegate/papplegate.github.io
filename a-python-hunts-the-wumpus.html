@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <title>    A Python hunts the Wumpus
+</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href='https://fonts.googleapis.com/css?family=Gentium+Book+Basic|Merriweather:400,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="/theme/css/cid.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+            <div class="container">
+
+<header class="blog-header">
+    <h1><a href="">Absurdly Simple</a></h1>
+    <p></p>
+    <nav>
+        <a href="/">INDEX</a>
+        <a href="/archives">ARCHIVES</a>
+        <a href="/categories">CATEGORIES</a>
+    </nav>
+</header>
+
+    <div class="post">
+
+        <header>
+            <h1>A Python hunts the Wumpus</h1>
+            <p class="date">Written on <time datetime="2024-11-12T00:00:00-05:00">Nov 12, 2024</time></p>
+        </header>
+
+        <article>
+            <p>I recently rewrote the game <em>Hunt the Wumpus</em> in Python.  In <em>Hunt the Wumpus</em>, you play a hunter who seeks to kill a creature called the Wumpus with your arrows.  You move from room to room within a cave system, looking for traces of the Wumpus and avoiding hazards.  You win if you shoot the Wumpus with an arrow; you lose if you fall victim to the Wumpus or one of the hazards.</p>
+<p><em>Hunt the Wumpus</em> comes to us from the early 1970s, an era when games were typed in from magazines or sent in the mail on cassettes.  The interface is strictly text-based, and your options each turn are limited to moving to an adjacent cave or firing an arrow.  If you'd like a map of the caves, you're welcome to draw one out on paper.</p>
+<p>The code is reprinted in a book called <em>What to Do After You Hit Return: A Computer Games Book from People's Computer Company</em> (1977).  The code is written in Hewlett-Packard 2000F BASIC.  The game has been reimplemented and improved upon repeatedly, both <a href="https://archive.org/details/Super-Wumpus-Jack-Emmerichs-1978">soon after its initial publication</a> and <a href="https://blog.codinghorror.com/the-history-of-wumpus/">more recently</a>.</p>
+<p>Python is a good choice for this reimplementation project because the <code>cmd</code> module in Python's standard library is tailor-made for creating text-based interfaces like the one that <em>Hunt the Wumpus</em> uses.  On a personal level, I wrote Python code in a previous role and liked it.  I wanted to spend more time with the language by implementing something nontrivial.</p>
+<p>The cave rooms in <em>Hunt the Wumpus</em> are not arranged in a grid -- instead, they correspond to the 20 vertices on a dodecahedron (a 12-sided solid) and are connected by the dodecahedron's edges.  Despite this arrangement, it is possible to "flatten" the graph without causing the edges between connecting nodes to cross.</p>
+<p>The original BASIC code represents the cave network as a 20-by-3 matrix.  The following listing reads the 60 integers in the <code>DATA</code> statements into this matrix with two nested <code>FOR</code> loops.  The rows (<code>J</code>) correspond to the individual caves (numbered 1-20), and the three values in each row indicate the caves to which that cave connects.  That is, the first row represents the caves connected to cave 1, the second row contains the caves connected to cave 2, and so on. </p>
+<div class="highlight"><pre><span></span><code><span class="nl">60</span><span class="w"> </span><span class="kr">REM</span><span class="o">-</span><span class="w"> </span><span class="vg">SET</span><span class="w"> </span><span class="vg">UP</span><span class="w"> </span><span class="vg">CAVE</span><span class="w"> </span><span class="p">(</span><span class="vg">DODECAHEDRAL</span><span class="w"> </span><span class="vg">NODE</span><span class="w"> </span><span class="k">LIST</span><span class="p">)</span>
+<span class="nl">70</span><span class="w"> </span><span class="kd">DIM</span><span class="w"> </span><span class="vg">S</span><span class="p">(</span><span class="il">20</span><span class="p">,</span><span class="w"> </span><span class="il">3</span><span class="p">)</span>
+<span class="nl">80</span><span class="w"> </span><span class="kr">FOR</span><span class="w"> </span><span class="vg">J</span><span class="o">=</span><span class="il">1</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="il">20</span>
+<span class="nl">90</span><span class="w"> </span><span class="kr">FOR</span><span class="w"> </span><span class="vg">K</span><span class="o">=</span><span class="il">1</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="il">3</span>
+<span class="nl">100</span><span class="w"> </span><span class="kr">READ</span><span class="w"> </span><span class="vg">S</span><span class="p">(</span><span class="vg">J</span><span class="p">,</span><span class="vg">K</span><span class="p">)</span>
+<span class="nl">110</span><span class="w"> </span><span class="kr">NEXT</span><span class="w"> </span><span class="vg">K</span>
+<span class="nl">120</span><span class="w"> </span><span class="kr">NEXT</span><span class="w"> </span><span class="vg">J</span>
+<span class="nl">130</span><span class="w"> </span><span class="kd">DATA</span><span class="w"> </span><span class="il">2</span><span class="p">,</span><span class="il">5</span><span class="p">,</span><span class="il">8</span><span class="p">,</span><span class="il">1</span><span class="p">,</span><span class="il">3</span><span class="p">,</span><span class="il">10</span><span class="p">,</span><span class="il">2</span><span class="p">,</span><span class="il">4</span><span class="p">,</span><span class="il">12</span><span class="p">,</span><span class="il">3</span><span class="p">,</span><span class="il">5</span><span class="p">,</span><span class="il">14</span><span class="p">,</span><span class="il">1</span><span class="p">,</span><span class="il">4</span><span class="p">,</span><span class="il">6</span>
+<span class="nl">140</span><span class="w"> </span><span class="kd">DATA</span><span class="w"> </span><span class="il">5</span><span class="p">,</span><span class="il">7</span><span class="p">,</span><span class="il">15</span><span class="p">,</span><span class="il">6</span><span class="p">,</span><span class="il">8</span><span class="p">,</span><span class="il">17</span><span class="p">,</span><span class="il">1</span><span class="p">,</span><span class="il">7</span><span class="p">,</span><span class="il">9</span><span class="p">,</span><span class="il">8</span><span class="p">,</span><span class="il">10</span><span class="p">,</span><span class="il">18</span><span class="p">,</span><span class="il">2</span><span class="p">,</span><span class="il">9</span><span class="p">,</span><span class="il">11</span>
+<span class="nl">150</span><span class="w"> </span><span class="kd">DATA</span><span class="w"> </span><span class="il">10</span><span class="p">,</span><span class="il">12</span><span class="p">,</span><span class="il">19</span><span class="p">,</span><span class="il">3</span><span class="p">,</span><span class="il">11</span><span class="p">,</span><span class="il">13</span><span class="p">,</span><span class="il">12</span><span class="p">,</span><span class="il">14</span><span class="p">,</span><span class="il">20</span><span class="p">,</span><span class="il">4</span><span class="p">,</span><span class="il">13</span><span class="p">,</span><span class="il">15</span><span class="p">,</span><span class="il">6</span><span class="p">,</span><span class="il">14</span><span class="p">,</span><span class="il">16</span>
+<span class="nl">160</span><span class="w"> </span><span class="kd">DATA</span><span class="w"> </span><span class="il">15</span><span class="p">,</span><span class="il">17</span><span class="p">,</span><span class="il">20</span><span class="p">,</span><span class="il">7</span><span class="p">,</span><span class="il">16</span><span class="p">,</span><span class="il">18</span><span class="p">,</span><span class="il">9</span><span class="p">,</span><span class="il">17</span><span class="p">,</span><span class="il">19</span><span class="p">,</span><span class="il">11</span><span class="p">,</span><span class="il">18</span><span class="p">,</span><span class="il">20</span><span class="p">,</span><span class="il">13</span><span class="p">,</span><span class="il">16</span><span class="p">,</span><span class="il">19</span>
+</code></pre></div>
+
+<p><a href="https://www.python.org/doc/essays/graphs/">Graphs are naturally represented as dictionaries in Python</a>.  In this case, the individual key-value pairs relate caves 1-20 to three-value tuples reflecting the connecting caves.</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+    <span class="mi">4</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">14</span><span class="p">),</span>
+    <span class="mi">5</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="mi">6</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+    <span class="mi">7</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">17</span><span class="p">),</span>
+    <span class="mi">8</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+    <span class="mi">9</span><span class="p">:</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span>
+    <span class="mi">10</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span>
+    <span class="mi">11</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">19</span><span class="p">),</span>
+    <span class="mi">12</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span>
+    <span class="mi">13</span><span class="p">:</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+    <span class="mi">14</span><span class="p">:</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+    <span class="mi">15</span><span class="p">:</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+    <span class="mi">16</span><span class="p">:</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+    <span class="mi">17</span><span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span>
+    <span class="mi">18</span><span class="p">:</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">),</span>
+    <span class="mi">19</span><span class="p">:</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+    <span class="mi">20</span><span class="p">:</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">19</span><span class="p">),</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The values of this dictionary are tuples because <a href="https://docs.python.org/3/library/typing.html#annotating-tuples">Python's typing system allows us to explicitly specify that the tuples have three elements apiece</a>.  Otherwise, frozensets might have been a more natural choice.  Tuples preserve ordering, which isn't necessary in this case.  Like tuples, frozensets are immutable, but the typing for frozensets doesn't allow specifying how many elements each set will have.</p>
+<p>The BASIC and Python listings illustrate the adjacency-matrix and adjacency-list graph representations, respectively.</p>
+<p>Possible improvements
+Less violent setup -- you're trying to photograph the Wumpus with a camera drone, instead of killing it with arrows 
+Add a turn limit
+Make the Wumpus try to catch the player 
+Automap</p>
+        </article>
+
+        <footer>
+            <p>This entry is posted in <a href="/category/reimplementation.html">reimplementation</a>.</p>
+        </footer>
+
+
+    </div>
+
+
+<footer class="blog-footer">
+
+    <ul class="nav">
+    </ul>
+
+    <p class="disclaimer">
+    Built with <a href="http://getpelican.com">Pelican</a> and the <a href="https://github.com/hdra/Pelican-Cid">Cid</a> theme.
+    </p>
+</footer>
+            </div>
+    </body>
+</html>
