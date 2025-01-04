@@ -36,6 +36,8 @@ I want to be clear that right now (late 2024) is a tough time to change jobs, es
 
 I've read that, if you meet 75% of the qualifications listed on a job posting, you should apply.  I think applying is generally a good idea.  You might get lucky, and you can't win if you don't play.
 
+As a side note, don't limit yourself to applying to roles at large companies.  There are lots of totally reasonable positions at small and medium employers that you may not have heard of before.
+
 # I've heard that, when a role asks for either a CV or a resume, that's a trick.  What do you think?
 
 I've never seen that situation, but let me talk about application documents.  Resumes are very different from CVs.  My advisor used to say that a CV should include anything that your grandmother would be proud of -- every conference talk, every minor award.
